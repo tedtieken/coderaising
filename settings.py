@@ -88,8 +88,7 @@ USE_SOUTH = True
 # In the format (('Full Name', 'email@example.com'),
 #                ('Full Name', 'anotheremail@example.com'))
 ADMINS = (
-    (('Nate Aune', 'nate@appsembler.com'),
-    ('Dan Choi', 'dhchoi@gmail.com'))
+    (('Ted Tieken', 'ted.tieken@gmail.com'))
     # ('Your Name', 'your_email@domain.com'),
 )
 MANAGERS = ADMINS
@@ -147,7 +146,7 @@ STATICFILES_FINDERS = (
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
     # other finders..
     'compressor.finders.CompressorFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    #'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 COMPRESS_PARSER = 'compressor.parser.HtmlParser'
 COMPRESS_CSS_FILTERS = ['compressor.filters.css_default.CssAbsoluteFilter', 
@@ -420,6 +419,10 @@ if os.environ.get("RACK_ENV", None) == "production":
     EMAIL_USE_TLS = True 
     DEFAULT_FROM_EMAIL = 'nate@appsembler.com'
 
+else:
+    INSTALLED_APPS += ("gunicorn",
+                       "storages")    
+
 # this doesn't seem necessary. 
 # THEME = "apps.theme"
 
@@ -434,6 +437,36 @@ try:
     from local_settings import *
 except ImportError:
     pass
+
+
+# A sample logging configuration. The only tangible logging
+# performed by this configuration is to send an email to
+# the site admins on every HTTP 500 error when DEBUG=False.
+# See http://docs.djangoproject.com/en/dev/topics/logging for
+# more details on how to customize your logging configuration.
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
+    'handlers': {
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler'
+        }
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    }
+}
 
 
 ####################
