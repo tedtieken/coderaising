@@ -419,7 +419,7 @@ if os.environ.get("RACK_ENV", None) == "production":
     EMAIL_USE_TLS = True 
     DEFAULT_FROM_EMAIL = 'nate@appsembler.com'
 
-    ALLOWED_HOSTS = ['.coderaising.com']
+    ALLOWED_HOSTS = ['.coderaising.com', 'coderaising-dev.herokuapp.com']
 
 else:
     INSTALLED_APPS += ("gunicorn",
